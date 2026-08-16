@@ -45,6 +45,8 @@ func (h *Handlers) InviteUser(w http.ResponseWriter, r *http.Request) {
 			render.Error(r.Context(), w, err, http.StatusForbidden, "only team owner/admin can invite members")
 		case errors.Is(err, apperr.ErrAlreadyMember):
 			render.Error(r.Context(), w, err, http.StatusConflict, "user is already a member of this team")
+		case errors.Is(err, apperr.ErrNotFound):
+			render.Error(r.Context(), w, err, http.StatusNotFound, "no user registered with that email")
 		default:
 			render.Error(r.Context(), w, err, http.StatusInternalServerError, "internal server error")
 		}

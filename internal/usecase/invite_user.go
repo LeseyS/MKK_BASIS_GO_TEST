@@ -9,7 +9,7 @@ import (
 	"github.com/LeseyS/MKK_BASIS_GO_TEST/internal/domain"
 	"github.com/LeseyS/MKK_BASIS_GO_TEST/internal/dto"
 	"github.com/LeseyS/MKK_BASIS_GO_TEST/pkg/transaction"
-	"github.com/sony/gobreaker"
+	"github.com/rs/zerolog/log"
 )
 
 func (uc *UseCase) InviteUser(ctx context.Context, in dto.InviteUserIn) (bool, error) {
@@ -59,10 +59,8 @@ func (uc *UseCase) InviteUser(ctx context.Context, in dto.InviteUserIn) (bool, e
 	}
 
 	if err := uc.notifier.SendInvite(ctx, in.Email, team.Name); err != nil {
-		if errors.Is(err, gobreaker.ErrOpenState) {
-			return true, nil
-		}
-		return true, fmt.Errorf("uc.notifier.SendInvite: %w", err)
+		log.Error().Err(err).Msg("usecase: notifier.SendInvite")
+		return false, nil
 	}
 
 	return true, nil

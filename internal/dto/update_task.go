@@ -12,5 +12,5 @@ type UpdateTaskIn struct {
 }
 
 type UpdateTaskOut struct {
-	Task domain.Task
+	Task domain.Task `json:"task"`
 }

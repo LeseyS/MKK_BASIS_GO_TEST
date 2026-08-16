@@ -2,6 +2,7 @@ package mysql
 
 import (
 	"context"
+	"database/sql"
 	"errors"
 	"fmt"
 
@@ -12,11 +13,11 @@ import (
 
 func (my *MySQL) GetMemberRole(ctx context.Context, teamID, userID int64) (domain.Role, error) {
 	var role domain.Role
-	const sql = `SELECT role FROM team_members WHERE team_id = ? AND user_id = ?`
+	const query = `SELECT role FROM team_members WHERE team_id = ? AND user_id = ?`
 
 	txOrPool := transaction.TryExtractTX(ctx)
-	err := txOrPool.QueryRowContext(ctx, sql, teamID, userID).Scan(&role)
-	if errors.Is(err, ErrNoRows) {
+	err := txOrPool.QueryRowContext(ctx, query, teamID, userID).Scan(&role)
+	if errors.Is(err, sql.ErrNoRows) {
 		return role, apperr.ErrNotFound
 	}
 

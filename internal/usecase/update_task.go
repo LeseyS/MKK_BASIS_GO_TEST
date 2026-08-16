@@ -46,13 +46,16 @@ func (uc *UseCase) UpdateTask(ctx context.Context, in dto.UpdateTaskIn) (out dto
 			return fmt.Errorf("uc.mysql.GetTaskByID (post-update): %w", err)
 		}
 
-		if err := uc.redis.InvalidateTeamTasks(ctx, updated.TeamID); err != nil {
-			log.Error().Err(err).Msg("usecase: redis.InvalidateTeamTasks")
-		}
-
 		out.Task = updated
 		return nil
 	})
+	if err != nil {
+		return out, err
+	}
 
-	return out, err
+	if err := uc.redis.InvalidateTeamTasks(ctx, out.Task.TeamID); err != nil {
+		log.Error().Err(err).Msg("usecase: redis.InvalidateTeamTasks")
+	}
+
+	return out, nil
 }

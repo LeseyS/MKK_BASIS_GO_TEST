@@ -1,14 +1,9 @@
 package mysql
 
 import (
-	"database/sql"
 	"errors"
 
 	"github.com/go-sql-driver/mysql"
-)
-
-var (
-	ErrNoRows = sql.ErrNoRows
 )
 
 func isDuplicateErr(err error) bool {

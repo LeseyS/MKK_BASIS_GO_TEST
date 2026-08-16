@@ -23,9 +23,9 @@ func (uc *UseCase) CreateWithOwner(ctx context.Context, in dto.CreateTeamIn) (dt
 			return fmt.Errorf("mysql.CreateTeamMembers: %w", err)
 		}
 
-		team, err := uc.mysql.GetTeam(ctx, teamID)
+		team, err := uc.mysql.GetTeamByID(ctx, teamID)
 		if err != nil {
-			return fmt.Errorf("mysql.GetTeam: %w", err)
+			return fmt.Errorf("mysql.GetTeamByID: %w", err)
 		}
 
 		out.Team = team

@@ -9,7 +9,7 @@ import (
 )
 
 func (my *MySQL) TeamListForUser(ctx context.Context, userID int64) ([]domain.Team, error) {
-	const sql = `
+	const query = `
 		SELECT t.id, t.name, t.created_by, t.created_at
 		FROM teams t
 		JOIN team_members tm ON tm.team_id = t.id
@@ -24,7 +24,7 @@ func (my *MySQL) TeamListForUser(ctx context.Context, userID int64) ([]domain.Te
 
 	var teams []domain.Team
 
-	rows, err := txOrPool.QueryContext(ctx, sql, args...)
+	rows, err := txOrPool.QueryContext(ctx, query, args...)
 	if err != nil {
 		return teams, fmt.Errorf("txOrPool.QueryContext: %w", err)
 	}

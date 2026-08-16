@@ -10,7 +10,7 @@ import (
 )
 
 func (my *MySQL) CreateUser(ctx context.Context, user domain.User) (int64, error) {
-	const sql = `INSERT INTO users (email, name, password_hash) VALUES (?, ?, ?)`
+	const query = `INSERT INTO users (email, name, password_hash) VALUES (?, ?, ?)`
 
 	args := []any{
 		user.Email,
@@ -20,7 +20,7 @@ func (my *MySQL) CreateUser(ctx context.Context, user domain.User) (int64, error
 
 	txOrPool := transaction.TryExtractTX(ctx)
 
-	res, err := txOrPool.ExecContext(ctx, sql, args...)
+	res, err := txOrPool.ExecContext(ctx, query, args...)
 	if err != nil {
 		if isDuplicateErr(err) {
 			return 0, apperr.ErrDuplicate

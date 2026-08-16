@@ -21,7 +21,6 @@ type MySQL interface {
 
 	CreateTeam(ctx context.Context, in dto.CreateTeamIn) (int64, error)
 	CreateTeamMembers(ctx context.Context, teamID, userID int64, role domain.Role) error
-	GetTeam(ctx context.Context, teamID int64) (domain.Team, error)
 	TeamListForUser(ctx context.Context, userID int64) ([]domain.Team, error)
 	GetMemberRole(ctx context.Context, teamID, userID int64) (domain.Role, error)
 	AddMemberTeam(ctx context.Context, in dto.AddMemberTeam) error

@@ -2,6 +2,7 @@ package mysql
 
 import (
 	"context"
+	"database/sql"
 	"errors"
 	"fmt"
 
@@ -25,7 +26,7 @@ func (my *MySQL) UpdateTask(ctx context.Context, in dto.UpdateTaskIn) error {
 
 	err := txOrPool.QueryRowContext(ctx, selectSQL, in.TaskID).
 		Scan(&curTitle, &curDescription, &curStatus, &curAssigneeID)
-	if errors.Is(err, ErrNoRows) {
+	if errors.Is(err, sql.ErrNoRows) {
 		return apperr.ErrNotFound
 	}
 	if err != nil {
