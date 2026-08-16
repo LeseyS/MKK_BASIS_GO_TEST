@@ -9,7 +9,7 @@ import (
 )
 
 func (my *MySQL) CreateTeam(ctx context.Context, in dto.CreateTeamIn) (int64, error) {
-	const sql = `INSERT INTO teams (name, created_by) VALUES (?, ?)`
+	const query = `INSERT INTO teams (name, created_by) VALUES (?, ?)`
 
 	args := []any{
 		in.Name,
@@ -18,7 +18,7 @@ func (my *MySQL) CreateTeam(ctx context.Context, in dto.CreateTeamIn) (int64, er
 
 	txOrPool := transaction.TryExtractTX(ctx)
 
-	res, err := txOrPool.ExecContext(ctx, sql, args...)
+	res, err := txOrPool.ExecContext(ctx, query, args...)
 	if err != nil {
 		return 0, fmt.Errorf("inserting user: %w", err)
 	}

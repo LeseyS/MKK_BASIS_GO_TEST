@@ -3,7 +3,7 @@ package dto
 import "github.com/LeseyS/MKK_BASIS_GO_TEST/internal/domain"
 
 type CreateTaskOut struct {
-	Task domain.Task
+	Task domain.Task `json:"task"`
 }
 
 type CreateTaskIn struct {

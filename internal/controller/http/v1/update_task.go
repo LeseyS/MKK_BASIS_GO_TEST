@@ -8,6 +8,7 @@ import (
 	"github.com/LeseyS/MKK_BASIS_GO_TEST/internal/dto"
 	"github.com/LeseyS/MKK_BASIS_GO_TEST/internal/middleware"
 	"github.com/LeseyS/MKK_BASIS_GO_TEST/pkg/render"
+	"github.com/LeseyS/MKK_BASIS_GO_TEST/pkg/validate"
 	"github.com/go-chi/chi/v5"
 )
 
@@ -23,6 +24,11 @@ func (h *Handlers) UpdateTask(w http.ResponseWriter, r *http.Request) {
 	var req dto.UpdateTaskIn
 	if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
 		render.Error(r.Context(), w, err, http.StatusBadRequest, "Invalid request body")
+		return
+	}
+
+	if err := validate.V.Struct(req); err != nil {
+		render.Error(r.Context(), w, err, http.StatusBadRequest, "validation error")
 		return
 	}
 

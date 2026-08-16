@@ -1,7 +1,9 @@
 package config
 
 import (
+	"errors"
 	"fmt"
+	"os"
 
 	"github.com/LeseyS/MKK_BASIS_GO_TEST/pkg/httpserver"
 	"github.com/LeseyS/MKK_BASIS_GO_TEST/pkg/jwtutil"
@@ -24,7 +26,7 @@ func New() (Config, error) {
 	var config Config
 
 	err := godotenv.Load(".env")
-	if err != nil {
+	if err != nil && !errors.Is(err, os.ErrNotExist) {
 		return config, fmt.Errorf("godotenv.Load: %w", err)
 	}
 

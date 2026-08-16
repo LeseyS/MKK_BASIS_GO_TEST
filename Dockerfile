@@ -14,7 +14,6 @@ RUN CGO_ENABLED=0 GOOS=linux \
 FROM alpine:3.22 AS run
 
 COPY --from=build /task_service /task_service
-COPY --from=build /app/.env /.env
 
 EXPOSE 8080
 

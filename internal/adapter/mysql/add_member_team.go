@@ -10,10 +10,10 @@ import (
 )
 
 func (my *MySQL) AddMemberTeam(ctx context.Context, in dto.AddMemberTeam) error {
-	const sql = `INSERT INTO team_members (team_id, user_id, role) VALUES (?, ?, ?)`
+	const query = `INSERT INTO team_members (team_id, user_id, role) VALUES (?, ?, ?)`
 
 	txOrPool := transaction.TryExtractTX(ctx)
-	_, err := txOrPool.ExecContext(ctx, sql, in.TeamID, in.UserID, in.Role)
+	_, err := txOrPool.ExecContext(ctx, query, in.TeamID, in.UserID, in.Role)
 	if err != nil {
 		if isDuplicateErr(err) {
 			return apperr.ErrDuplicate

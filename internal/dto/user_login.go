@@ -8,6 +8,6 @@ type UserLoginIn struct {
 }
 
 type UserLoginOut struct {
-	Token string `json:"token"`
-	User  domain.User
+	Token string      `json:"token"`
+	User  domain.User `json:"user"`
 }

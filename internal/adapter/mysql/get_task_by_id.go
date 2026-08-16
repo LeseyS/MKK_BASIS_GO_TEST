@@ -2,6 +2,7 @@ package mysql
 
 import (
 	"context"
+	"database/sql"
 	"errors"
 	"fmt"
 
@@ -11,15 +12,15 @@ import (
 )
 
 func (my *MySQL) GetTaskByID(ctx context.Context, id int64) (domain.Task, error) {
-	const sql = `SELECT id, team_id, title, description, status, assignee_id, created_by, created_at, updated_at
+	const query = `SELECT id, team_id, title, description, status, assignee_id, created_by, created_at, updated_at
 		FROM tasks WHERE id = ?`
 
 	txOrPool := transaction.TryExtractTX(ctx)
 
 	var t domain.Task
-	err := txOrPool.QueryRowContext(ctx, sql, id).Scan(&t.ID, &t.TeamID, &t.Title, &t.Description, &t.Status,
+	err := txOrPool.QueryRowContext(ctx, query, id).Scan(&t.ID, &t.TeamID, &t.Title, &t.Description, &t.Status,
 		&t.AssigneeID, &t.CreatedBy, &t.CreatedAt, &t.UpdatedAt)
-	if errors.Is(err, ErrNoRows) {
+	if errors.Is(err, sql.ErrNoRows) {
 		return t, apperr.ErrNotFound
 	}
 

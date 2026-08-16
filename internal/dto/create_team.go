@@ -10,5 +10,5 @@ type CreateTeamIn struct {
 }
 
 type CreateTeamOut struct {
-	Team domain.Team
+	Team domain.Team `json:"team"`
 }

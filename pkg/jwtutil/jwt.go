@@ -11,8 +11,8 @@ import (
 var ErrInvalidToken = errors.New("invalid or expired token")
 
 type JWTConfig struct {
-	Secret string        `envconfig:"SECRET" required:"true"`
-	TTL    time.Duration `envconfig:"TTL" required:"true"`
+	Secret string        `envconfig:"JWT_SECRET" required:"true"`
+	TTL    time.Duration `envconfig:"JWT_TTL"    required:"true"`
 }
 
 type Claims struct {
