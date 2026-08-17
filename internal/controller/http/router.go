@@ -48,6 +48,7 @@ func Router(r *chi.Mux, uc *usecase.UseCase, m *metrics.HTTPServer, jwtIssuer *j
 				r.Get("/tasks", v1.ListTasks)
 				r.Get("/tasks/invalid-assignees", v1.TasksInvalidAssignee)
 				r.Put("/tasks/{id}", v1.UpdateTask)
+				r.Get("/tasks/{id}/history", v1.TaskHistory)
 			})
 		})
 	})

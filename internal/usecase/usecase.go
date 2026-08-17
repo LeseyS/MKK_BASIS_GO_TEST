@@ -34,6 +34,7 @@ type MySQL interface {
 	ListTasks(ctx context.Context, f dto.ListTasks) ([]domain.Task, int64, error)
 	GetTaskByID(ctx context.Context, id int64) (domain.Task, error)
 	UpdateTask(ctx context.Context, in dto.UpdateTaskIn) error
+	TaskHistory(ctx context.Context, in dto.TaskHistoryIn) ([]dto.TaskHistoryEntry, int64, error)
 }
 
 type TokenIssuer interface {

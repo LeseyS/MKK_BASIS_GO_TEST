@@ -7,6 +7,14 @@ up:
 down:
 	docker compose down
 
+test:
+	go test ./... -race
+
+cover:
+	go test ./... -coverprofile=coverage.out
+	go tool cover -func=coverage.out | tail -1
+	go tool cover -html=coverage.out -o coverage.html
+
 migrate-install:
 	go install -tags 'mysql' github.com/golang-migrate/migrate/v4/cmd/migrate@v4.18.1
 

@@ -14,6 +14,7 @@ require (
 	github.com/redis/go-redis/v9 v9.22.0
 	github.com/rs/zerolog v1.35.1
 	github.com/sony/gobreaker v1.0.0
+	github.com/stretchr/testify v1.12.0
 	golang.org/x/crypto v0.55.0
 )
 
@@ -37,4 +38,5 @@ require (
 	golang.org/x/sys v0.47.0 // indirect
 	golang.org/x/text v0.41.0 // indirect
 	google.golang.org/protobuf v1.36.11 // indirect
+	gopkg.in/yaml.v3 v3.0.1 // indirect
 )
