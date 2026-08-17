@@ -7,13 +7,14 @@ import (
 )
 
 var (
-	ErrBadRequest    = errors.New("bad request")
-	ErrUnauthorized  = errors.New("unauthorized")
-	ErrForbidden     = errors.New("forbidden")
-	ErrNotFound      = errors.New("not found")
-	ErrConflict      = errors.New("conflict")
-	ErrUnprocessable = errors.New("unprocessable entity")
-	ErrServer        = errors.New("server error")
+	ErrBadRequest      = errors.New("bad request")
+	ErrUnauthorized    = errors.New("unauthorized")
+	ErrForbidden       = errors.New("forbidden")
+	ErrNotFound        = errors.New("not found")
+	ErrConflict        = errors.New("conflict")
+	ErrUnprocessable   = errors.New("unprocessable entity")
+	ErrTooManyRequests = errors.New("too many requests")
+	ErrServer          = errors.New("server error")
 )
 
 type APIError struct {
@@ -39,6 +40,8 @@ func (e *APIError) Unwrap() error {
 		return ErrConflict
 	case http.StatusUnprocessableEntity:
 		return ErrUnprocessable
+	case http.StatusTooManyRequests:
+		return ErrTooManyRequests
 	default:
 		if e.StatusCode >= http.StatusInternalServerError {
 			return ErrServer

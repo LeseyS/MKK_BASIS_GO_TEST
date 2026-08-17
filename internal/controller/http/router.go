@@ -1,7 +1,6 @@
 package http
 
 import (
-	"net/http"
 	"time"
 
 	ver1 "github.com/LeseyS/MKK_BASIS_GO_TEST/internal/controller/http/v1"
@@ -12,12 +11,9 @@ import (
 	"github.com/LeseyS/MKK_BASIS_GO_TEST/pkg/logger"
 	"github.com/LeseyS/MKK_BASIS_GO_TEST/pkg/metrics"
 	"github.com/go-chi/chi/v5"
-	"github.com/go-chi/chi/v5/middleware"
 	"github.com/go-chi/httprate"
 	"github.com/prometheus/client_golang/prometheus/promhttp"
 )
-
-const defaultRateLimitPerMinute = 100
 
 func Router(r *chi.Mux, uc *usecase.UseCase, m *metrics.HTTPServer, jwtIssuer *jwtutil.Issuer, c httpserver.Config) {
 	v1 := ver1.New(uc)
@@ -35,9 +31,10 @@ func Router(r *chi.Mux, uc *usecase.UseCase, m *metrics.HTTPServer, jwtIssuer *j
 
 		r.Route("/v1", func(r chi.Router) {
 			r.Group(func(r chi.Router) {
-				r.Use(httprate.LimitBy(rateLimit, time.Minute, func(r *http.Request) (string, error) {
-					return httprate.CanonicalizeIP(middleware.GetClientIP(r.Context())), nil
-				}))
+				r.Use(httprate.Limit(rateLimit, time.Minute,
+					httprate.WithKeyFuncs(clientIPKey),
+					httprate.WithLimitHandler(rateLimitExceeded),
+				))
 
 				r.Post("/register", v1.CreateUser)
 				r.Post("/login", v1.UserLogin)
@@ -45,6 +42,10 @@ func Router(r *chi.Mux, uc *usecase.UseCase, m *metrics.HTTPServer, jwtIssuer *j
 
 			r.Group(func(r chi.Router) {
 				r.Use(appmw.Auth(jwtIssuer))
+				r.Use(httprate.Limit(rateLimit, time.Minute,
+					httprate.WithKeyFuncs(userRateLimitKey),
+					httprate.WithLimitHandler(rateLimitExceeded),
+				))
 
 				r.Post("/teams", v1.CreateTeam)
 				r.Get("/teams", v1.TeamListForUser)

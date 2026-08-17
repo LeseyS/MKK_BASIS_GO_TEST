@@ -38,6 +38,7 @@ const (
 	dbUser     = "taskuser"
 	dbPassword = "taskpass"
 	httpPort   = "18080"
+	rateLimit  = 500
 )
 
 var ctx = context.Background()
@@ -68,7 +69,7 @@ func (s *Suite) SetupSuite() {
 	s.applyMigrations()
 
 	c := config.Config{
-		HTTP:  httpserver.Config{Port: httpPort, RateLimitPerMinute: 100_000},
+		HTTP:  httpserver.Config{Port: httpPort, RateLimitPerMinute: rateLimit},
 		MYSQL: mysqlCfg,
 		Redis: redisCfg,
 		JWT:   jwtutil.JWTConfig{Secret: "integration-secret", TTL: time.Hour},
