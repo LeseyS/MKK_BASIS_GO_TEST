@@ -13,8 +13,12 @@ var userCounter atomic.Int64
 
 const testPassword = "password123"
 
+func (s *Suite) uniqueEmail(name string) string {
+	return fmt.Sprintf("%s-%d@example.com", name, userCounter.Add(1))
+}
+
 func (s *Suite) newUser(name string) (*task_client.Client, task_client.User) {
-	email := fmt.Sprintf("%s-%d@example.com", name, userCounter.Add(1))
+	email := s.uniqueEmail(name)
 
 	client, user, err := s.api.RegisterAndLogin(ctx, name, email, testPassword)
 	s.NoError(err)
