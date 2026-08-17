@@ -11,7 +11,8 @@ import (
 )
 
 type Config struct {
-	Port string `default:"8080" envconfig:"HTTP_PORT"`
+	Port               string `default:"8080" envconfig:"HTTP_PORT"`
+	RateLimitPerMinute int    `default:"100"  envconfig:"HTTP_RATE_LIMIT_PER_MINUTE"`
 }
 
 type Server struct {

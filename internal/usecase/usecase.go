@@ -26,10 +26,15 @@ type MySQL interface {
 	AddMemberTeam(ctx context.Context, in dto.AddMemberTeam) error
 	GetTeamByID(ctx context.Context, teamID int64) (domain.Team, error)
 
+	TeamStats(ctx context.Context, userID int64) ([]dto.TeamStats, error)
+	TeamTopCreators(ctx context.Context, userID int64) ([]dto.TeamTopCreator, error)
+	TasksInvalidAssignee(ctx context.Context, userID int64) ([]dto.TaskInvalidAssignee, error)
+
 	CreateTask(ctx context.Context, t domain.Task) (domain.Task, error)
 	ListTasks(ctx context.Context, f dto.ListTasks) ([]domain.Task, int64, error)
 	GetTaskByID(ctx context.Context, id int64) (domain.Task, error)
 	UpdateTask(ctx context.Context, in dto.UpdateTaskIn) error
+	TaskHistory(ctx context.Context, in dto.TaskHistoryIn) ([]dto.TaskHistoryEntry, int64, error)
 }
 
 type TokenIssuer interface {
