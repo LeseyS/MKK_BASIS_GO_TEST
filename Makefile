@@ -19,3 +19,6 @@ migrate-up:
 
 migrate-down:
 	migrate -database "$(DB_MIGRATE_URL)" -path "$(MIGRATE_PATH)" down -all
+
+run:
+	go run ./cmd/app/main.go

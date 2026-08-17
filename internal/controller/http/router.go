@@ -40,10 +40,13 @@ func Router(r *chi.Mux, uc *usecase.UseCase, m *metrics.HTTPServer, jwtIssuer *j
 
 				r.Post("/teams", v1.CreateTeam)
 				r.Get("/teams", v1.TeamListForUser)
+				r.Get("/teams/stats", v1.TeamStats)
+				r.Get("/teams/top-creators", v1.TeamTopCreators)
 				r.Post("/teams/{id}/invite", v1.InviteUser)
 
 				r.Post("/tasks", v1.CreateTask)
 				r.Get("/tasks", v1.ListTasks)
+				r.Get("/tasks/invalid-assignees", v1.TasksInvalidAssignee)
 				r.Put("/tasks/{id}", v1.UpdateTask)
 			})
 		})
