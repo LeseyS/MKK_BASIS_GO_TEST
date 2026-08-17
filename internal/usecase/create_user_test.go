@@ -9,7 +9,6 @@ import (
 	"github.com/LeseyS/MKK_BASIS_GO_TEST/internal/domain"
 	"github.com/LeseyS/MKK_BASIS_GO_TEST/internal/dto"
 	"github.com/LeseyS/MKK_BASIS_GO_TEST/pkg/passwordhash"
-	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 )
 
@@ -31,12 +30,12 @@ func TestCreateUser_HashesPassword(t *testing.T) {
 	})
 
 	require.NoError(t, err)
-	assert.Equal(t, int64(42), out.ID)
-	assert.NotEqual(t, password, stored.PasswordHash, "пароль не должен храниться в открытом виде")
+	require.Equal(t, int64(42), out.ID)
+	require.NotEqual(t, password, stored.PasswordHash, "пароль не должен храниться в открытом виде")
 
 	ok, err := passwordhash.Verify(password, stored.PasswordHash)
 	require.NoError(t, err)
-	assert.True(t, ok, "сохранённый хеш должен проверяться исходным паролем")
+	require.True(t, ok, "сохранённый хеш должен проверяться исходным паролем")
 }
 
 func TestCreateUser_DuplicateEmail(t *testing.T) {

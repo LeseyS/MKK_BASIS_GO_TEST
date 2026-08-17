@@ -5,7 +5,6 @@ import (
 	"testing"
 
 	"github.com/LeseyS/MKK_BASIS_GO_TEST/internal/apperr"
-	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 )
 
@@ -40,7 +39,7 @@ func TestNewUser_KeepsFields(t *testing.T) {
 	u, err := NewUser("user@example.com", "alice", "stored-hash")
 
 	require.NoError(t, err)
-	assert.Equal(t, "user@example.com", u.Email)
-	assert.Equal(t, "alice", u.Name)
-	assert.Equal(t, "stored-hash", u.PasswordHash)
+	require.Equal(t, "user@example.com", u.Email)
+	require.Equal(t, "alice", u.Name)
+	require.Equal(t, "stored-hash", u.PasswordHash)
 }

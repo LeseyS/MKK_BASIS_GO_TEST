@@ -8,7 +8,6 @@ import (
 	"github.com/LeseyS/MKK_BASIS_GO_TEST/internal/apperr"
 	"github.com/LeseyS/MKK_BASIS_GO_TEST/internal/domain"
 	"github.com/LeseyS/MKK_BASIS_GO_TEST/internal/dto"
-	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 )
 
@@ -27,7 +26,7 @@ func TestRequireMembership_DBFailureIsNotForbidden(t *testing.T) {
 	})
 
 	require.ErrorIs(t, err, errDB)
-	assert.NotErrorIs(t, err, apperr.ErrForbidden,
+	require.NotErrorIs(t, err, apperr.ErrForbidden,
 		"сбой БД не должен выглядеть как отказ в доступе")
 }
 
@@ -48,7 +47,7 @@ func TestCreateTask_WriteFailure(t *testing.T) {
 	})
 
 	require.ErrorIs(t, err, errDB)
-	assert.Empty(t, rd.invalidatedTeams, "несозданная задача не должна сбрасывать кеш")
+	require.Empty(t, rd.invalidatedTeams, "несозданная задача не должна сбрасывать кеш")
 }
 
 func TestListTasks_MembershipCheckDBFailure(t *testing.T) {
@@ -62,7 +61,7 @@ func TestListTasks_MembershipCheckDBFailure(t *testing.T) {
 	_, err := uc.ListTasks(context.Background(), dto.ListTasks{TeamID: 1, UserID: 1})
 
 	require.ErrorIs(t, err, errDB)
-	assert.NotErrorIs(t, err, apperr.ErrForbidden)
+	require.NotErrorIs(t, err, apperr.ErrForbidden)
 }
 
 func TestListTasks_DBFailure(t *testing.T) {
@@ -84,7 +83,7 @@ func TestListTasks_DBFailure(t *testing.T) {
 	_, err := uc.ListTasks(context.Background(), dto.ListTasks{TeamID: 1, UserID: 1})
 
 	require.ErrorIs(t, err, errDB)
-	assert.Empty(t, rd.setFilters, "неудачную выборку в кеш не кладём")
+	require.Empty(t, rd.setFilters, "неудачную выборку в кеш не кладём")
 }
 
 func TestListTasks_CacheWriteFailureIsNotFatal(t *testing.T) {
@@ -109,7 +108,7 @@ func TestListTasks_CacheWriteFailureIsNotFatal(t *testing.T) {
 	out, err := uc.ListTasks(context.Background(), dto.ListTasks{TeamID: 1, UserID: 1})
 
 	require.NoError(t, err)
-	assert.Equal(t, int64(1), out.Total)
+	require.Equal(t, int64(1), out.Total)
 }
 
 func TestUpdateTask_ReadFailure(t *testing.T) {
@@ -123,7 +122,7 @@ func TestUpdateTask_ReadFailure(t *testing.T) {
 	_, err := uc.UpdateTask(context.Background(), dto.UpdateTaskIn{TaskID: 1, ActorID: 1})
 
 	require.ErrorIs(t, err, errDB)
-	assert.NotErrorIs(t, err, apperr.ErrNotFound)
+	require.NotErrorIs(t, err, apperr.ErrNotFound)
 }
 
 func TestUpdateTask_RereadFailure(t *testing.T) {
@@ -150,7 +149,7 @@ func TestUpdateTask_RereadFailure(t *testing.T) {
 	})
 
 	require.ErrorIs(t, err, errDB)
-	assert.Empty(t, rd.invalidatedTeams)
+	require.Empty(t, rd.invalidatedTeams)
 }
 
 func TestUpdateTask_TaskDisappearedDuringWrite(t *testing.T) {
@@ -213,7 +212,7 @@ func TestTaskHistory_ReadFailure(t *testing.T) {
 	_, err := uc.TaskHistory(context.Background(), dto.TaskHistoryIn{TaskID: 1, ActorID: 1})
 
 	require.ErrorIs(t, err, errDB)
-	assert.NotErrorIs(t, err, apperr.ErrNotFound)
+	require.NotErrorIs(t, err, apperr.ErrNotFound)
 }
 
 func TestTaskHistory_QueryFailure(t *testing.T) {
@@ -274,7 +273,7 @@ func TestCreateUser_DBFailure(t *testing.T) {
 	})
 
 	require.ErrorIs(t, err, errDB)
-	assert.NotErrorIs(t, err, apperr.ErrEmailTaken)
+	require.NotErrorIs(t, err, apperr.ErrEmailTaken)
 }
 
 func TestUserLogin_DBFailure(t *testing.T) {
@@ -290,7 +289,7 @@ func TestUserLogin_DBFailure(t *testing.T) {
 	})
 
 	require.ErrorIs(t, err, errDB)
-	assert.NotErrorIs(t, err, apperr.ErrInvalidCredentials)
+	require.NotErrorIs(t, err, apperr.ErrInvalidCredentials)
 }
 
 func TestInviteUser_TeamReadFailure(t *testing.T) {
@@ -319,7 +318,7 @@ func TestInviteUser_RoleLookupDBFailure(t *testing.T) {
 	})
 
 	require.ErrorIs(t, err, errDB)
-	assert.NotErrorIs(t, err, apperr.ErrForbidden)
+	require.NotErrorIs(t, err, apperr.ErrForbidden)
 }
 
 func TestInviteUser_MemberInsertDBFailure(t *testing.T) {
@@ -335,7 +334,7 @@ func TestInviteUser_MemberInsertDBFailure(t *testing.T) {
 	})
 
 	require.ErrorIs(t, err, errDB)
-	assert.Empty(t, nt.sentTo, "письмо не должно уходить, если участник не добавлен")
+	require.Empty(t, nt.sentTo, "письмо не должно уходить, если участник не добавлен")
 }
 
 func TestInviteUser_UserLookupDBFailure(t *testing.T) {
@@ -350,5 +349,5 @@ func TestInviteUser_UserLookupDBFailure(t *testing.T) {
 	})
 
 	require.ErrorIs(t, err, errDB)
-	assert.NotErrorIs(t, err, apperr.ErrNotFound)
+	require.NotErrorIs(t, err, apperr.ErrNotFound)
 }

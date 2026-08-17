@@ -7,7 +7,6 @@ import (
 
 	"github.com/LeseyS/MKK_BASIS_GO_TEST/internal/domain"
 	"github.com/LeseyS/MKK_BASIS_GO_TEST/internal/dto"
-	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 )
 
@@ -39,10 +38,10 @@ func TestCreateWithOwner_CreatorBecomesOwner(t *testing.T) {
 	})
 
 	require.NoError(t, err)
-	assert.Equal(t, int64(7), out.Team.ID)
-	assert.Equal(t, int64(7), gotTeamID)
-	assert.Equal(t, ownerID, gotUserID)
-	assert.Equal(t, domain.RoleOwner, gotRole, "создатель команды получает роль owner")
+	require.Equal(t, int64(7), out.Team.ID)
+	require.Equal(t, int64(7), gotTeamID)
+	require.Equal(t, ownerID, gotUserID)
+	require.Equal(t, domain.RoleOwner, gotRole, "создатель команды получает роль owner")
 }
 
 func TestCreateWithOwner_MembershipFailurePropagates(t *testing.T) {
@@ -70,7 +69,7 @@ func TestCreateWithOwner_MembershipFailurePropagates(t *testing.T) {
 func TestTeamListForUser(t *testing.T) {
 	my := &mockMySQL{
 		teamListForUser: func(_ context.Context, userID int64) ([]domain.Team, error) {
-			assert.Equal(t, int64(42), userID)
+			require.Equal(t, int64(42), userID)
 			return []domain.Team{{ID: 1, Name: "Alpha"}, {ID: 2, Name: "Beta"}}, nil
 		},
 	}
@@ -80,8 +79,8 @@ func TestTeamListForUser(t *testing.T) {
 
 	require.NoError(t, err)
 	require.Len(t, out, 2)
-	assert.Equal(t, "Alpha", out[0].Team.Name)
-	assert.Equal(t, "Beta", out[1].Team.Name)
+	require.Equal(t, "Alpha", out[0].Team.Name)
+	require.Equal(t, "Beta", out[1].Team.Name)
 }
 
 func TestTeamListForUser_Empty(t *testing.T) {
@@ -95,5 +94,5 @@ func TestTeamListForUser_Empty(t *testing.T) {
 	out, err := uc.TeamListForUser(context.Background(), 1)
 
 	require.NoError(t, err)
-	assert.Empty(t, out)
+	require.Empty(t, out)
 }

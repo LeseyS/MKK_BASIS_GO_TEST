@@ -7,7 +7,6 @@ import (
 	"github.com/LeseyS/MKK_BASIS_GO_TEST/internal/apperr"
 	"github.com/LeseyS/MKK_BASIS_GO_TEST/internal/domain"
 	"github.com/LeseyS/MKK_BASIS_GO_TEST/internal/dto"
-	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 )
 
@@ -78,8 +77,8 @@ func TestTaskHistory_LimitNormalization(t *testing.T) {
 			})
 
 			require.NoError(t, err)
-			assert.Equal(t, c.wantLimit, got.Limit)
-			assert.Equal(t, c.wantLimit, out.Limit)
+			require.Equal(t, c.wantLimit, got.Limit)
+			require.Equal(t, c.wantLimit, out.Limit)
 		})
 	}
 }
@@ -106,7 +105,7 @@ func TestTaskHistory_ReturnsEntries(t *testing.T) {
 
 	require.NoError(t, err)
 	require.Len(t, out.Entries, 1)
-	assert.Equal(t, int64(1), out.Total)
-	assert.Equal(t, "status", out.Entries[0].Field)
-	assert.Equal(t, "done", *out.Entries[0].NewValue)
+	require.Equal(t, int64(1), out.Total)
+	require.Equal(t, "status", out.Entries[0].Field)
+	require.Equal(t, "done", *out.Entries[0].NewValue)
 }

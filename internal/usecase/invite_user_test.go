@@ -9,7 +9,6 @@ import (
 	"github.com/LeseyS/MKK_BASIS_GO_TEST/internal/domain"
 	"github.com/LeseyS/MKK_BASIS_GO_TEST/internal/dto"
 	"github.com/sony/gobreaker"
-	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 )
 
@@ -115,10 +114,10 @@ func TestInviteUser_InviteeAddedAsMember(t *testing.T) {
 	})
 
 	require.NoError(t, err)
-	assert.True(t, emailSent)
-	assert.Equal(t, int64(2), added.UserID, "в команду добавляется приглашённый, а не приглашающий")
-	assert.Equal(t, domain.RoleMember, added.Role)
-	assert.Equal(t, []string{"invitee@example.com"}, nt.sentTo)
+	require.True(t, emailSent)
+	require.Equal(t, int64(2), added.UserID, "в команду добавляется приглашённый, а не приглашающий")
+	require.Equal(t, domain.RoleMember, added.Role)
+	require.Equal(t, []string{"invitee@example.com"}, nt.sentTo)
 }
 
 func TestInviteUser_EmailFailureStillSucceeds(t *testing.T) {
@@ -144,7 +143,7 @@ func TestInviteUser_EmailFailureStillSucceeds(t *testing.T) {
 			})
 
 			require.NoError(t, err, "участник уже добавлен — отказ почты не повод ронять запрос")
-			assert.False(t, emailSent, "флаг должен честно говорить, что письмо не ушло")
+			require.False(t, emailSent, "флаг должен честно говорить, что письмо не ушло")
 		})
 	}
 }

@@ -4,7 +4,6 @@ import (
 	"testing"
 
 	"github.com/LeseyS/MKK_BASIS_GO_TEST/internal/apperr"
-	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 )
 
@@ -12,7 +11,7 @@ func TestNewTask_DefaultStatus(t *testing.T) {
 	task, err := NewTask(1, "title", "description", "", 1, nil)
 
 	require.NoError(t, err)
-	assert.Equal(t, StatusTodo, task.Status, "пустой статус превращается в todo")
+	require.Equal(t, StatusTodo, task.Status, "пустой статус превращается в todo")
 }
 
 func TestNewTask_StatusValidation(t *testing.T) {
@@ -52,8 +51,8 @@ func TestNewTask_KeepsFields(t *testing.T) {
 	task, err := NewTask(7, "title", "description", StatusInProgress, 3, &assignee)
 
 	require.NoError(t, err)
-	assert.Equal(t, int64(7), task.TeamID)
-	assert.Equal(t, int64(3), task.CreatedBy)
+	require.Equal(t, int64(7), task.TeamID)
+	require.Equal(t, int64(3), task.CreatedBy)
 	require.NotNil(t, task.AssigneeID)
-	assert.Equal(t, assignee, *task.AssigneeID)
+	require.Equal(t, assignee, *task.AssigneeID)
 }

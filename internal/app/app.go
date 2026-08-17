@@ -57,7 +57,7 @@ func Run(ctx context.Context, c config.Config) error {
 
 	// HTTP
 	r := router.New()
-	http.Router(r, uc, httpMetrics, jwtIssuer)
+	http.Router(r, uc, httpMetrics, jwtIssuer, c.HTTP)
 	httpServer := httpserver.New(r, c.HTTP)
 
 	log.Info().Msg("app: started")

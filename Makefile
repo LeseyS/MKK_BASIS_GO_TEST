@@ -10,6 +10,9 @@ down:
 test:
 	go test ./... -race
 
+integration-test:
+	go test ./test/... -tags=integration -count=1 -v
+
 cover:
 	go test ./... -coverprofile=coverage.out
 	go tool cover -func=coverage.out | tail -1

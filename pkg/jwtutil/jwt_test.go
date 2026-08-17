@@ -5,7 +5,6 @@ import (
 	"time"
 
 	"github.com/golang-jwt/jwt/v5"
-	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 )
 
@@ -17,9 +16,9 @@ func TestGenerateAndParse(t *testing.T) {
 
 	claims, err := issuer.Parse(token)
 	require.NoError(t, err)
-	assert.Equal(t, int64(42), claims.UserID)
-	assert.Equal(t, "user@example.com", claims.Email)
-	assert.Equal(t, "42", claims.Subject)
+	require.Equal(t, int64(42), claims.UserID)
+	require.Equal(t, "user@example.com", claims.Email)
+	require.Equal(t, "42", claims.Subject)
 }
 
 func TestParse_ExpiredToken(t *testing.T) {

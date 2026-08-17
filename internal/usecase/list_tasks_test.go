@@ -8,7 +8,6 @@ import (
 	"github.com/LeseyS/MKK_BASIS_GO_TEST/internal/apperr"
 	"github.com/LeseyS/MKK_BASIS_GO_TEST/internal/domain"
 	"github.com/LeseyS/MKK_BASIS_GO_TEST/internal/dto"
-	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 )
 
@@ -69,10 +68,10 @@ func TestListTasks_LimitNormalization(t *testing.T) {
 			})
 
 			require.NoError(t, err)
-			assert.Equal(t, c.wantLimit, got.Limit, "лимит, ушедший в БД")
-			assert.Equal(t, c.wantOff, got.Offset, "offset, ушедший в БД")
-			assert.Equal(t, c.wantLimit, out.Limit, "лимит в ответе")
-			assert.Equal(t, c.wantOff, out.Offset, "offset в ответе")
+			require.Equal(t, c.wantLimit, got.Limit, "лимит, ушедший в БД")
+			require.Equal(t, c.wantOff, got.Offset, "offset, ушедший в БД")
+			require.Equal(t, c.wantLimit, out.Limit, "лимит в ответе")
+			require.Equal(t, c.wantOff, out.Offset, "offset в ответе")
 		})
 	}
 }
@@ -97,9 +96,9 @@ func TestListTasks_CacheHitSkipsDB(t *testing.T) {
 	out, err := uc.ListTasks(context.Background(), dto.ListTasks{TeamID: 1, UserID: 1})
 
 	require.NoError(t, err)
-	assert.Len(t, out.Tasks, 1)
-	assert.Equal(t, defaultTasksLimit, out.Limit, "limit проставляется и на закешированном ответе")
-	assert.Empty(t, rd.setFilters, "повторно класть в кеш не нужно")
+	require.Len(t, out.Tasks, 1)
+	require.Equal(t, defaultTasksLimit, out.Limit, "limit проставляется и на закешированном ответе")
+	require.Empty(t, rd.setFilters, "повторно класть в кеш не нужно")
 }
 
 func TestListTasks_CacheMissStoresResult(t *testing.T) {
@@ -121,8 +120,8 @@ func TestListTasks_CacheMissStoresResult(t *testing.T) {
 	out, err := uc.ListTasks(context.Background(), dto.ListTasks{TeamID: 1, UserID: 1})
 
 	require.NoError(t, err)
-	assert.Equal(t, int64(2), out.Total)
-	assert.Len(t, rd.setFilters, 1, "результат должен уехать в кеш")
+	require.Equal(t, int64(2), out.Total)
+	require.Len(t, rd.setFilters, 1, "результат должен уехать в кеш")
 }
 
 func TestListTasks_BrokenCacheFallsBackToDB(t *testing.T) {
@@ -144,5 +143,5 @@ func TestListTasks_BrokenCacheFallsBackToDB(t *testing.T) {
 	out, err := uc.ListTasks(context.Background(), dto.ListTasks{TeamID: 1, UserID: 1})
 
 	require.NoError(t, err, "недоступный кеш не должен ломать выдачу")
-	assert.Equal(t, int64(1), out.Total)
+	require.Equal(t, int64(1), out.Total)
 }

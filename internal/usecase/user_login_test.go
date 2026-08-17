@@ -10,7 +10,6 @@ import (
 	"github.com/LeseyS/MKK_BASIS_GO_TEST/internal/domain"
 	"github.com/LeseyS/MKK_BASIS_GO_TEST/internal/dto"
 	"github.com/LeseyS/MKK_BASIS_GO_TEST/pkg/passwordhash"
-	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 )
 
@@ -27,7 +26,7 @@ func TestUserLogin_UnknownEmail(t *testing.T) {
 	})
 
 	require.ErrorIs(t, err, apperr.ErrInvalidCredentials)
-	assert.NotErrorIs(t, err, apperr.ErrNotFound,
+	require.NotErrorIs(t, err, apperr.ErrNotFound,
 		"несуществующий email и неверный пароль должны быть неотличимы снаружи")
 }
 
@@ -60,8 +59,8 @@ func TestUserLogin_Success(t *testing.T) {
 	}
 	ti := &mockTokenIssuer{
 		generate: func(userID int64, email string) (string, error) {
-			assert.Equal(t, int64(42), userID)
-			assert.Equal(t, "user@example.com", email)
+			require.Equal(t, int64(42), userID)
+			require.Equal(t, "user@example.com", email)
 			return "signed-token", nil
 		},
 	}
@@ -72,12 +71,12 @@ func TestUserLogin_Success(t *testing.T) {
 	})
 
 	require.NoError(t, err)
-	assert.Equal(t, "signed-token", out.Token)
-	assert.Equal(t, int64(42), out.User.ID)
+	require.Equal(t, "signed-token", out.Token)
+	require.Equal(t, int64(42), out.User.ID)
 
 	body, err := json.Marshal(out)
 	require.NoError(t, err)
-	assert.NotContains(t, string(body), hash, "хеш пароля не должен попадать в ответ")
+	require.NotContains(t, string(body), hash, "хеш пароля не должен попадать в ответ")
 }
 
 func TestUserLogin_TokenIssuerFailure(t *testing.T) {
@@ -101,5 +100,5 @@ func TestUserLogin_TokenIssuerFailure(t *testing.T) {
 	})
 
 	require.Error(t, err)
-	assert.Empty(t, out.Token)
+	require.Empty(t, out.Token)
 }

@@ -5,7 +5,6 @@ import (
 	"testing"
 
 	"github.com/LeseyS/MKK_BASIS_GO_TEST/internal/dto"
-	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 )
 
@@ -32,7 +31,7 @@ func (m *analyticsMySQL) TasksInvalidAssignee(ctx context.Context, userID int64)
 func TestTeamStats(t *testing.T) {
 	my := &analyticsMySQL{
 		teamStats: func(_ context.Context, userID int64) ([]dto.TeamStats, error) {
-			assert.Equal(t, int64(42), userID, "выборка ограничена командами вызывающего")
+			require.Equal(t, int64(42), userID, "выборка ограничена командами вызывающего")
 			return []dto.TeamStats{{TeamID: 1, Name: "Alpha", MembersCount: 3, DoneLast7Days: 2}}, nil
 		},
 	}
@@ -42,7 +41,7 @@ func TestTeamStats(t *testing.T) {
 
 	require.NoError(t, err)
 	require.Len(t, out, 1)
-	assert.Equal(t, int64(2), out[0].DoneLast7Days)
+	require.Equal(t, int64(2), out[0].DoneLast7Days)
 }
 
 func TestTeamStats_DBFailure(t *testing.T) {
@@ -61,7 +60,7 @@ func TestTeamStats_DBFailure(t *testing.T) {
 func TestTeamTopCreators(t *testing.T) {
 	my := &analyticsMySQL{
 		teamTopCreators: func(_ context.Context, userID int64) ([]dto.TeamTopCreator, error) {
-			assert.Equal(t, int64(42), userID)
+			require.Equal(t, int64(42), userID)
 			return []dto.TeamTopCreator{
 				{TeamID: 1, UserID: 1, TasksCreated: 5, Position: 1},
 				{TeamID: 1, UserID: 2, TasksCreated: 3, Position: 2},
@@ -74,7 +73,7 @@ func TestTeamTopCreators(t *testing.T) {
 
 	require.NoError(t, err)
 	require.Len(t, out, 2)
-	assert.Equal(t, 1, out[0].Position)
+	require.Equal(t, 1, out[0].Position)
 }
 
 func TestTeamTopCreators_DBFailure(t *testing.T) {
@@ -93,7 +92,7 @@ func TestTeamTopCreators_DBFailure(t *testing.T) {
 func TestTasksInvalidAssignee(t *testing.T) {
 	my := &analyticsMySQL{
 		tasksInvalidAssignee: func(_ context.Context, userID int64) ([]dto.TaskInvalidAssignee, error) {
-			assert.Equal(t, int64(42), userID)
+			require.Equal(t, int64(42), userID)
 			return []dto.TaskInvalidAssignee{{TaskID: 9, TeamID: 1, AssigneeID: 7}}, nil
 		},
 	}
@@ -103,7 +102,7 @@ func TestTasksInvalidAssignee(t *testing.T) {
 
 	require.NoError(t, err)
 	require.Len(t, out, 1)
-	assert.Equal(t, int64(9), out[0].TaskID)
+	require.Equal(t, int64(9), out[0].TaskID)
 }
 
 func TestTasksInvalidAssignee_DBFailure(t *testing.T) {

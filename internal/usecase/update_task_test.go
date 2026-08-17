@@ -8,7 +8,6 @@ import (
 	"github.com/LeseyS/MKK_BASIS_GO_TEST/internal/apperr"
 	"github.com/LeseyS/MKK_BASIS_GO_TEST/internal/domain"
 	"github.com/LeseyS/MKK_BASIS_GO_TEST/internal/dto"
-	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 )
 
@@ -92,9 +91,9 @@ func TestUpdateTask_SuccessInvalidatesCache(t *testing.T) {
 	})
 
 	require.NoError(t, err)
-	assert.Equal(t, domain.StatusDone, out.Task.Status)
-	assert.Equal(t, []int64{teamID}, rd.invalidatedTeams)
-	assert.Equal(t, 2, my.getTaskByIDCalls, "задача читается до правки и перечитывается после")
+	require.Equal(t, domain.StatusDone, out.Task.Status)
+	require.Equal(t, []int64{teamID}, rd.invalidatedTeams)
+	require.Equal(t, 2, my.getTaskByIDCalls, "задача читается до правки и перечитывается после")
 }
 
 func TestUpdateTask_FailedWriteKeepsCache(t *testing.T) {
@@ -118,5 +117,5 @@ func TestUpdateTask_FailedWriteKeepsCache(t *testing.T) {
 	})
 
 	require.Error(t, err)
-	assert.Empty(t, rd.invalidatedTeams, "при откате правки кеш сбрасывать не нужно")
+	require.Empty(t, rd.invalidatedTeams, "при откате правки кеш сбрасывать не нужно")
 }

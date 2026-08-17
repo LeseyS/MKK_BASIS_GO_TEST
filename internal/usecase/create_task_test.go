@@ -8,7 +8,6 @@ import (
 	"github.com/LeseyS/MKK_BASIS_GO_TEST/internal/apperr"
 	"github.com/LeseyS/MKK_BASIS_GO_TEST/internal/domain"
 	"github.com/LeseyS/MKK_BASIS_GO_TEST/internal/dto"
-	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 )
 
@@ -46,7 +45,7 @@ func TestCreateTask_AssigneeOutsideTeam(t *testing.T) {
 	})
 
 	require.ErrorIs(t, err, apperr.ErrInvalidAssignee)
-	assert.NotErrorIs(t, err, apperr.ErrForbidden)
+	require.NotErrorIs(t, err, apperr.ErrForbidden)
 }
 
 func TestCreateTask_InvalidStatus(t *testing.T) {
@@ -84,9 +83,9 @@ func TestCreateTask_SuccessInvalidatesCache(t *testing.T) {
 	})
 
 	require.NoError(t, err)
-	assert.Equal(t, int64(100), out.Task.ID)
-	assert.Equal(t, domain.StatusTodo, out.Task.Status, "пустой статус должен становиться todo")
-	assert.Equal(t, []int64{teamID}, rd.invalidatedTeams)
+	require.Equal(t, int64(100), out.Task.ID)
+	require.Equal(t, domain.StatusTodo, out.Task.Status, "пустой статус должен становиться todo")
+	require.Equal(t, []int64{teamID}, rd.invalidatedTeams)
 }
 
 func TestCreateTask_CacheFailureDoesNotFailRequest(t *testing.T) {
